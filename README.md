@@ -1,7 +1,11 @@
 playground/: temporary testing scripts
+
 module/: algorithm
+
 param/: default hyperparameter sets
+
 utils/: small functions
+
 dataset/: data
 
 running scripts:
