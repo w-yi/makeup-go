@@ -48,29 +48,30 @@ class CRN(nn.Module):
         }[self.nonlinear]
 
     def generate_commonnetwork(self):
-        return nn.Sequential([
+        return nn.Sequential(
             nn.Conv2d(IN_CHANNEL, self.channel1, self.kernel1, padding=1),
             self.get_nonlinear(),
             nn.Conv2d(self.channel1, self.channel1, self.kernel1, padding=1),
             self.get_nonlinear(),
             nn.Conv2d(self.channel1, self.channel1, self.kernel1, padding=1),
             self.get_nonlinear(),
-        ])
+        )
 
     def generate_subnetwork(self):
-        return nn.Sequential([
+        return nn.Sequential(
             # shrinking
-            nn.Conv2d(self.channel1, self.channel2, self.kernel1, padding=1),
+            nn.Conv2d(self.channel1, self.channel2, self.kernel2, padding=1),
             # stack conv with nonlinear
             self.get_nonlinear(),
-            nn.Conv2d(self.channel2, self.channel2, self.kernel1, padding=1),
+            nn.Conv2d(self.channel2, self.channel2, self.kernel2, padding=1),
             self.get_nonlinear(),
-            nn.Conv2d(self.channel2, self.channel2, self.kernel1, padding=1),
+            nn.Conv2d(self.channel2, self.channel2, self.kernel2, padding=1),
             self.get_nonlinear(),
-            nn.Conv2d(self.channel2, self.channel2, self.kernel1, padding=1),
+            nn.Conv2d(self.channel2, self.channel2, self.kernel2, padding=1),
             self.get_nonlinear(),
             # expending
-            nn.Conv2d(self.channel2, self.channel3, self.kernel1, padding=1),
+            nn.Conv2d(self.channel2, self.channel3, self.kernel2, padding=1),
             self.get_nonlinear(),
-        ])
+            nn.Conv2d(self.channel3, IN_CHANNEL, self.kernel2, padding=1),
+        )
 
