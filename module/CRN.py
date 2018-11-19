@@ -16,7 +16,7 @@ class _debug(nn.Module):
 
 
 class CRN(nn.Module):
-    def __init__(self, eigenvalues, n_top=7, kernel1=3, kernel2=3, channel1=56, channel2=12, channel3=64, nonlinear="PReLU"):
+    def __init__(self, eigenvalues, kernel1=3, kernel2=3, channel1=56, channel2=12, channel3=64, nonlinear="PReLU"):
         # channel3???????????64, eigenvalues
         super(CRN, self).__init__()
         self.kernel1 = kernel1
@@ -28,16 +28,16 @@ class CRN(nn.Module):
         self.eigenvalues = eigenvalues
 
         self.common_network = self.generate_commonnetwork()
-        self.subnetwork_list = [self.generate_subnetwork() for _ in range(n_top + 1)]
+        self.subnetwork_list = [self.generate_subnetwork() for _ in eigenvalues]
 
         # self._initialize_weights()
 
     def forward(self, x):
-        # !!!!scale normalization
         features = self.common_network(x)
         components = [sub_network(features) for sub_network in self.subnetwork_list]
         if self.training:
-            return torch.stack(components)
+            # @TODO: dimension may have mistakes
+            return torch.stack(components, dim=1)
         else:
             return torch.sum(torch.stack([I * std for I, std in zip(components, self.eigenvalues)]), (0))
 

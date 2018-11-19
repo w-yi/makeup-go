@@ -2,6 +2,11 @@ network:
   kwargs:
     nonlinear: "PReLU"
 
+train_dataset:
+  name: 'Train'
+valid_dataset:
+  name: 'Valid'
+
 optimizer:
   name: 'SGD'
   kwargs: 

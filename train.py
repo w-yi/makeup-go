@@ -6,12 +6,13 @@ import yaml
 import torch
 from torch.utils import data
 
-from module import CRN, pca
+from module import CRN
 # import evaluator as _evaluator
 from utils import registry
-from utils import optimizer as _optimizer
-from utils import lr_scheduler as _lr_scheduler
-from utils import loss as _loss
+# from utils import dataset as _dataset
+# from utils import optimizer as _optimizer
+# from utils import lr_scheduler as _lr_scheduler
+# from utils import loss as _loss
 from utils import arg
 
 
@@ -22,19 +23,17 @@ def train(param):
     # (Based on PCA Results ->) 2. The components of the difference between the beautified images and the ground truth
     # Check the size of dataset images, decide whether to use batch operation
     # return a tensor of the eigenvalues
-    # Some functions, probabably useless:
+    # DRAFT:
 
-    # train_dataset = registry.create('Dataset', param.train_dataset.name)(**param.train_dataset.kwargs)
-    # valid_dataset = registry.create('Dataset', param.valid_dataset.name)(**param.valid_dataset.kwargs)
-    # train_data_loader = data.DataLoader(train_dataset, param.loader.batch_size, shuffle=param.loader.shuffle,
-    #                                     num_workers=param.loader.num_workers, pin_memory=param.use_gpu,
-    #                                     drop_last=param.loader.drop_last)
-    # valid_data_loader = data.DataLoader(valid_dataset, param.loader.batch_size, shuffle=param.loader.shuffle,
-    #                                     num_workers=param.loader.num_workers, pin_memory=param.use_gpu, drop_last=False)
+    train_dataset = registry.create('Dataset', param["train_dataset"]["name"])()
+    valid_dataset = registry.create('Dataset', param["valid_dataset"]["name"])()
+    train_data_loader = data.DataLoader(train_dataset, param.loader.batch_size, shuffle=param.loader.shuffle,
+                                        num_workers=param.loader.num_workers, pin_memory=param.use_gpu,
+                                        drop_last=param.loader.drop_last)
+    valid_data_loader = data.DataLoader(valid_dataset, param.loader.batch_size, shuffle=param.loader.shuffle,
+                                        num_workers=param.loader.num_workers, pin_memory=param.use_gpu, drop_last=False)
 
-
-
-    eigenvalues = torch.Tensor([1,1,1,1,1,1])
+    eigenvalues = train_dataset.get_()
     # model = torch.nn.DataParallel(registry.create('Network', param.network.name)(**param.network.kwargs))
     model = CRN.CRN(eigenvalues=eigenvalues, **param["network"]["kwargs"])
 
@@ -57,6 +56,10 @@ def train(param):
             optimizer.step()
 
         model.eval()
+        # @TODO: EVALUSTE!!!
+        # valid_data_loader...
+        model.train()
+
         torch.save({
             'model': model.state_dict(),
             'optimizer': optimizer.state_dict(),
