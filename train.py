@@ -27,11 +27,9 @@ def train(param):
 
     train_dataset = registry.create('Dataset', param["train_dataset"]["name"])()
     valid_dataset = registry.create('Dataset', param["valid_dataset"]["name"])()
-    train_data_loader = data.DataLoader(train_dataset, param.loader.batch_size, shuffle=param.loader.shuffle,
-                                        num_workers=param.loader.num_workers, pin_memory=param.use_gpu,
-                                        drop_last=param.loader.drop_last)
-    valid_data_loader = data.DataLoader(valid_dataset, param.loader.batch_size, shuffle=param.loader.shuffle,
-                                        num_workers=param.loader.num_workers, pin_memory=param.use_gpu, drop_last=False)
+    train_data_loader = data.DataLoader(train_dataset, param**["loader"])
+    valid_data_loader = data.DataLoader(valid_dataset, param**["loader"])
+    # pin_memory=param.use_gpu,
 
     eigenvalues = train_dataset.get_()
     # model = torch.nn.DataParallel(registry.create('Network', param.network.name)(**param.network.kwargs))
