@@ -1,5 +1,5 @@
 '''
-A wrapper for ImageNet.
+A wrapper for naive dataset.
 '''
 
 import os
