@@ -23,7 +23,7 @@ lr_scheduler:
     gamma: 0.2
 
 loss:
-  name: 'CrossEntropy'
+  name: 'MSE'
   kwargs: {}
 
 
