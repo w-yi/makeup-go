@@ -4,6 +4,7 @@ A wrapper for naive dataset.
 
 import os
 from torchvision import datasets, transforms
+from skimage import io
 
 import torch
 from torch.utils.data.dataset import Dataset
