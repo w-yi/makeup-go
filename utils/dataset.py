@@ -63,7 +63,7 @@ class ValidDataset(Dataset):
 
 def load_one_image(path):
     img = io.imread(path)
-    return np.array(img)
+    return torch.FloatTensor(img)
 
 
 def data_walk(walk_dir):
@@ -81,4 +81,4 @@ def load_all_images(image_dir):
 		path = image_dir + name
 		img = load_one_image(path)
 		all_imgs.append(img)
-	return np.array(all_imgs)
+	return torch.FloatTensor(all_imgs)
