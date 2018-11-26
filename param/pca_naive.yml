@@ -1,0 +1,5 @@
+dataset:
+  name: 'PCA'
+  kwargs:
+    path: "./data/all_"
+
