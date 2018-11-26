@@ -24,11 +24,12 @@ class TrainDataset(Dataset):
         beautify_path = "../data/train_beautified"  # where to load beautified imgs
         self.image_x = load_all_images(beautify_path)  # load beautified images: N x H x W x 3
         image_y = load_all_images(original_path)      # load ground truth imgs: N x H x W x 3
-        self.image_e = get_patches(image_y - image_x).view(N, -1)  # N x (H*W*3), every entry is a vector
+        self.image_e = get_patches(image_y - image_x)  # N x (H*W*3), every entry is a vector
         # N_total * patch_m x patch_m x 3
         # TODO:
-
-        eigenvectors, eigenvalues = PCA(image_e)  # orrdered by the value of eigenvelues
+        my_pca = PCA(image_e)
+        # get all patch_m*patch_m*channels evecs and evals
+        eigenvectors, eigenvalues = my_pca.get_evec_eval() # orrdered by the value of eigenvelues
         self.eigenvectors = eigenvectors[:n_top]
         self.eigenvalues = eigenvectors[:n_top+1]
 
