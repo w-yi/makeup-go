@@ -25,10 +25,10 @@ def train(param):
     # return a tensor of the eigenvalues
     # DRAFT:
 
-    train_dataset = registry.create('Dataset', param["train_dataset"]["name"])()
-    valid_dataset = registry.create('Dataset', param["valid_dataset"]["name"])()
-    train_data_loader = data.DataLoader(train_dataset, param**["loader"])
-    valid_data_loader = data.DataLoader(valid_dataset, param**["loader"])
+    train_dataset = registry.create('Dataset', param["train_dataset"]["name"])(**param["train_dataset"]["kwargs"])
+    valid_dataset = registry.create('Dataset', param["valid_dataset"]["name"])(**param["valid_dataset"]["kwargs"])
+    train_data_loader = data.DataLoader(train_dataset, **param["loader"])
+    valid_data_loader = data.DataLoader(valid_dataset, **param["loader"])
     # pin_memory=param.use_gpu,
 
     eigenvalues = train_dataset.get_()

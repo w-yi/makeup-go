@@ -4,8 +4,12 @@ network:
 
 train_dataset:
   name: 'Train'
+  kwargs:
+    path: "./data/train_"
 valid_dataset:
   name: 'Valid'
+  kwargs:
+    path: "./data/valid_"
 
 optimizer:
   name: 'SGD'
