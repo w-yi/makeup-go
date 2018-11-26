@@ -13,6 +13,9 @@ from utils import registry
 from module import pca
 
 
+patch_m = 11
+
+
 @registry.register('Dataset', 'Train')
 class TrainDataset(Dataset):
     def __init__(self, n_top=7):
@@ -21,8 +24,10 @@ class TrainDataset(Dataset):
         beautify_path = "../data/train_beautified"  # where to load beautified imgs
         self.image_x = load_all_images(beautify_path)  # load beautified images: N x H x W x 3
         image_y = load_all_images(original_path)      # load ground truth imgs: N x H x W x 3
-        self.image_e = (image_y - image_x).view(N, -1)  # N x (H*W*3), every entry is a vector
+        self.image_e = get_patches(image_y - image_x).view(N, -1)  # N x (H*W*3), every entry is a vector
+        # N_total * patch_m x patch_m x 3
         # TODO:
+
         eigenvectors, eigenvalues = PCA(image_e)  # orrdered by the value of eigenvelues
         self.eigenvectors = eigenvectors[:n_top]
         self.eigenvalues = eigenvectors[:n_top+1]
@@ -82,3 +87,17 @@ def load_all_images(image_dir):
 		img = load_one_image(path)
 		all_imgs.append(img)
 	return torch.FloatTensor(all_imgs)
+
+
+def get_patches(images):
+	N, height, width, channels = images.shape
+	n_h = height // patch_m
+	n_w = width // patch_m
+	patches = np.zeros((N, n_h, n_w, patch_m, patch_m, channels))
+	for i in range(N):
+		for h in range(n_h):
+			for w in range(n_w):
+				patches[i, h, w] = images[i, n_h*patch_m:(n_h+1)*patch_m, n_w*patch_m:(n_w+1)*patch_m, :]
+	patches = patches.reshape((N*n_h*n_w, patch_m, patch_m, channels))
+	return torch.FloatTensor(patches)
+
