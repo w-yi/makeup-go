@@ -35,11 +35,7 @@ class CRN(nn.Module):
     def forward(self, x):
         features = self.common_network(x)
         components = [sub_network(features) for sub_network in self.subnetwork_list]
-        if self.training:
-            # @TODO: dimension may have mistakes
-            return torch.stack(components, dim=1)
-        else:
-            return torch.sum(torch.stack([I * std for I, std in zip(components, self.eigenvalues)]), (0))
+        return torch.stack(components, dim=1)
 
     def get_nonlinear(self):
         return{

@@ -3,13 +3,16 @@ network:
     nonlinear: "PReLU"
 
 train_dataset:
-  name: 'Train'
+  name: 'Naive'
   kwargs:
     path: "./data/train_"
 valid_dataset:
-  name: 'Valid'
+  name: 'Naive'
   kwargs:
     path: "./data/valid_"
+
+PCA:
+  kwargs: {}
 
 optimizer:
   name: 'SGD'

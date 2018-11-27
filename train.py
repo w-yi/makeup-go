@@ -6,14 +6,15 @@ import yaml
 import torch
 from torch.utils import data
 
-from module import CRN
+from module import CRN, _pca_
 # import evaluator as _evaluator
 from utils import registry
-# from utils import dataset as _dataset
+from utils import dataset as _dataset
 # from utils import optimizer as _optimizer
 # from utils import lr_scheduler as _lr_scheduler
 # from utils import loss as _loss
 from utils import arg
+
 
 
 def train(param):
@@ -39,6 +40,8 @@ def train(param):
     optimizer = registry.create('Optimizer', param["optimizer"]["name"])(model.parameters(), **param["optimizer"]["kwargs"])
     lr_scheduler = registry.create('LRScheduler', param["lr_scheduler"]["name"])(optimizer, **param["lr_scheduler"]["kwargs"])
 
+    pca = _pca_.PCA(param["PCA"]["kwargs"])
+
     # TODO: checkpoint
 
     # if param.use_gpu:
@@ -47,16 +50,27 @@ def train(param):
     for epoch in range(int(param["epoch"])):
         for inputs, target in train_data_loader:
             optimizer.zero_grad()
+
+            ground_truth = pca.get_components(inputs, targets, True)
+
             output = model(inputs)
-            loss = criterion(output, target)
+
+            # how to get the truth
+            # ground_truth = pca.get_components(inputs, targets, False)
+            # how to get an img:
+            # output = model(inputs)
+            # img = pca.generate_an_img(output, inputs)
+
+            loss = criterion(output, ground_truth)
 
             loss.backward()
             optimizer.step()
 
-        model.eval()
-        # @TODO: EVALUSTE!!!
+        # model.eval()
+        # @TODO: EVALUATE!!!
         # valid_data_loader...
-        model.train()
+
+        # model.train()
 
         torch.save({
             'model': model.state_dict(),
