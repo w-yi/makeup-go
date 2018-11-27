@@ -29,7 +29,7 @@ class PCADataset(Dataset):
         image_e = get_patches(image_y - image_x)  # N x (H*W*3), every entry is a vector
         # N_total * patch_m x patch_m x 3
         # TODO:
-        my_pca = PCA(image_e)
+        my_pca = pca.pca(image_e)
         # get all patch_m*patch_m*channels evecs and evals
         eigenvectors, eigenvalues = my_pca.get_evec_eval() # orrdered by the value of eigenvelues
         self.eigenvectors = eigenvectors[:n_top]
@@ -61,7 +61,7 @@ class TrainDataset(Dataset):
         self.image_e = get_patches(image_y - image_x)  # N x (H*W*3), every entry is a vector
         # N_total * patch_m x patch_m x 3
         # TODO:
-        my_pca = PCA(image_e)
+        my_pca = pca(image_e)
         # get all patch_m*patch_m*channels evecs and evals
         eigenvectors, eigenvalues = my_pca.get_evec_eval() # orrdered by the value of eigenvelues
         self.eigenvectors = eigenvectors[:n_top]
@@ -129,11 +129,12 @@ def get_patches(images):
     N, height, width, channels = images.shape
     n_h = height // patch_m
     n_w = width // patch_m
+    print(n_h, n_w)
     patches = np.zeros((N, n_h, n_w, patch_m, patch_m, channels))
     for i in range(N):
         for h in range(n_h):
             for w in range(n_w):
-                patches[i, h, w] = images[i, n_h*patch_m:(n_h+1)*patch_m, n_w*patch_m:(n_w+1)*patch_m, :]
+                patches[i, h, w] = images[i, h*patch_m:(h+1)*patch_m, w*patch_m:(w+1)*patch_m, :]
     patches = patches.reshape((N*n_h*n_w, patch_m, patch_m, channels))
     return torch.tensor(patches)
 
