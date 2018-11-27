@@ -129,7 +129,6 @@ def get_patches(images):
     N, height, width, channels = images.shape
     n_h = height // patch_m
     n_w = width // patch_m
-    print(n_h, n_w)
     patches = np.zeros((N, n_h, n_w, patch_m, patch_m, channels))
     for i in range(N):
         for h in range(n_h):
