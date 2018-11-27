@@ -19,7 +19,7 @@ patch_m = 11
 
 
 @registry.register('Dataset', 'PCA')
-class TrainDataset(Dataset):
+class PCADataset(Dataset):
     def __init__(self, path, n_top=7):
         # @TODO
         original_path = path + "original/"  # where to load original images

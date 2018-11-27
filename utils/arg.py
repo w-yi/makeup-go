@@ -38,6 +38,8 @@ class StoreDictKeyPair(argparse.Action):
 
 
 def update(load, overwrite):
+    if not overwrite:
+        return
     for key, value in overwrite.items():
         assert key in load, "Invalid key in overwrite parameters"
         if isinstance(value, dict):
