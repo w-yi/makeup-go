@@ -79,5 +79,4 @@ if __name__ == '__main__':
     # print(param)
     arg.update(param, args.overwrite_param)
     print(param)
-
     train(param)
