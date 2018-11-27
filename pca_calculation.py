@@ -25,6 +25,6 @@ if __name__ == '__main__':
     # print(args.overwrite_param)
     param = yaml.load(open(os.path.join('param', '{}.yml'.format(args.load_params))))
     # print(param)
-    print(param)
+    # print(param)
 
     main(param)

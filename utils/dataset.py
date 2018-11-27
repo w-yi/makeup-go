@@ -24,9 +24,9 @@ class PCADataset(Dataset):
         # @TODO
         original_path = path + "original/"  # where to load original images
         beautify_path = path + "beautified/"  # where to load beautified imgs
-        self.image_x = load_all_images(beautify_path)  # load beautified images: N x H x W x 3
-        self.image_y = load_all_images(original_path)      # load ground truth imgs: N x H x W x 3
-        self.image_e = get_patches(image_y - image_x)  # N x (H*W*3), every entry is a vector
+        image_x = load_all_images(beautify_path)  # load beautified images: N x H x W x 3
+        image_y = load_all_images(original_path)      # load ground truth imgs: N x H x W x 3
+        image_e = get_patches(image_y - image_x)  # N x (H*W*3), every entry is a vector
         # N_total * patch_m x patch_m x 3
         # TODO:
         my_pca = PCA(image_e)
@@ -47,9 +47,7 @@ class PCADataset(Dataset):
         return self.data.__len__()
 
     def __getitem__(self, idx):
-        x = self.image_x[idx]
-        y = self.image_y[idx]
-        return [x, y]
+        return [0,0]
 
 
 @registry.register('Dataset', 'Train')
@@ -105,7 +103,7 @@ class ValidDataset(Dataset):
 
 def load_one_image(path):
     img = io.imread(path)
-    return torch.FloatTensor(img)
+    return img
 
 
 def data_walk(walk_dir):
@@ -123,7 +121,8 @@ def load_all_images(image_dir):
         path = image_dir + name
         img = load_one_image(path)
         all_imgs.append(img)
-    return torch.FloatTensor(all_imgs)
+    all_imgs = np.array(all_imgs)
+    return torch.tensor(all_imgs)
 
 
 def get_patches(images):
@@ -136,5 +135,5 @@ def get_patches(images):
             for w in range(n_w):
                 patches[i, h, w] = images[i, n_h*patch_m:(n_h+1)*patch_m, n_w*patch_m:(n_w+1)*patch_m, :]
     patches = patches.reshape((N*n_h*n_w, patch_m, patch_m, channels))
-    return torch.FloatTensor(patches)
+    return torch.tensor(patches)
 
