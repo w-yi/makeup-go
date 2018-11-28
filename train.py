@@ -5,6 +5,7 @@ import logging
 import yaml
 import torch
 from torch.utils import data
+from torchvision.utils import save_image
 
 from module import CRN, _pca_
 # import evaluator as _evaluator
@@ -15,6 +16,8 @@ from utils import lr_scheduler as _lr_scheduler
 from utils import loss as _loss
 from utils import arg
 
+from PIL import Image
+import torchvision.transforms.functional as TF
 
 
 def train(param):
@@ -27,9 +30,9 @@ def train(param):
     # DRAFT:
 
     train_dataset = registry.create('Dataset', param["train_dataset"]["name"])(**param["train_dataset"]["kwargs"])
-    valid_dataset = registry.create('Dataset', param["valid_dataset"]["name"])(**param["valid_dataset"]["kwargs"])
+    # valid_dataset = registry.create('Dataset', param["valid_dataset"]["name"])(**param["valid_dataset"]["kwargs"])
     train_data_loader = data.DataLoader(train_dataset, **param["loader"])
-    valid_data_loader = data.DataLoader(valid_dataset, **param["loader"])
+    # valid_data_loader = data.DataLoader(valid_dataset, **param["loader"])
     # pin_memory=param.use_gpu,
 
     # eigenvalues = train_dataset.get_()
@@ -58,11 +61,6 @@ def train(param):
 
             output = model(inputs)
             print("model")
-            # how to get the truth
-            # ground_truth = pca.get_components(inputs, targets, False)
-            # how to get an img:
-            # output = model(inputs)
-            # img = pca.generate_an_img(output, inputs)
 
             loss = criterion(output, ground_truth)
 
@@ -72,17 +70,30 @@ def train(param):
         # model.eval()
         # @TODO: EVALUATE!!!
         # valid_data_loader...
+        # how to get the truth
+        # ground_truth = pca.get_components(inputs, targets, False)
+        # how to get img:
+        # output = model(inputs)
+        # img = pca.generate_img(output, inputs)
 
         # model.train()
 
-        torch.save({
-            'model': model.state_dict(),
-            'optimizer': optimizer.state_dict(),
-            'lr_scheduler': lr_scheduler.state_dict()
-        },
-            os.path.join("TODO!!!")
-        )
-        logging.debug('saving model done')
+        # torch.save({
+        #     'model': model.state_dict(),
+        #     'optimizer': optimizer.state_dict(),
+        #     'lr_scheduler': lr_scheduler.state_dict()
+        # },
+        #     os.path.join("TODO!!!")
+        # )
+        # logging.debug('saving model done')
+    if param["valid"]:
+        image = Image.open(param["valid"])
+        x = TF.to_tensor(image)
+        sz = x.shape
+        x.unsqueeze_(0)
+        output = model(x)
+        img = pca.generate_img(output, inputs).view(sz)
+        save_image(img, "result.jpg")
 
 
 if __name__ == '__main__':
@@ -93,7 +104,16 @@ if __name__ == '__main__':
     args = parser.parse_args()
     # print(args.overwrite_param)
     param = yaml.load(open(os.path.join('param', '{}.yml'.format(args.load_params))))
+    print(param["valid"])
+
     # print(param)
     arg.update(param, args.overwrite_param)
     # print(param)
+    if param["valid"]:
+        image = Image.open(param["valid"])
+        x = TF.to_tensor(image)
+        sz = x.shape
+        x.unsqueeze_(0)
+        y = x.view(sz)
+        save_image(y, "result.jpg")
     train(param)

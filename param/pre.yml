@@ -6,12 +6,7 @@ train_dataset:
   name: 'Naive'
   kwargs:
     path: "./data/EECS442_Makeup_Go/result_"
-    len: 0
-valid_dataset:
-  name: 'Naive'
-  kwargs:
-    path: "./data/EECS442_Makeup_Go/result_"
-    len: 0
+    len: 50
 
 PCA:
   kwargs: {}
@@ -38,15 +33,16 @@ loss:
 
 loader:
   shuffle: True
-  batch_size: 50000
+  batch_size: 1
   num_workers: 0
   drop_last: false
 
 
 checkpoint: null
 # use_gpu: True
-epoch: 1000
+epoch: 500
 # evaluator:
 #   name: 'Default'
 #   kwargs: {}
 
+valid: ./data/EECS442_Makeup_Go/result_beautified/999_original.jpg

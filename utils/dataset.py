@@ -55,7 +55,7 @@ patch_m = 11
 
 @registry.register('Dataset', 'Naive')
 class TrainDataset(Dataset):
-    def __init__(self, path):
+    def __init__(self, path, len):
         # @TODO
         self.y_path = path + "original/"  # where to load original images
         self.x_path = path + "beautified/"  # where to load beautified imgs
@@ -73,9 +73,10 @@ class TrainDataset(Dataset):
         self.y_files = [f for f in os.listdir(self.y_path)]
         self.x_files.sort()
         self.y_files.sort()
+        self.len = len
 
     def __len__(self):
-        return len(self.x_files)
+        return self.len if self.len > 0 else len(self.x_files)
 
     def __getitem__(self, idx):
         # x = self.image_x[idx]  # H x W x 3
