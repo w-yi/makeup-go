@@ -36,25 +36,28 @@ def train(param):
     # model = torch.nn.DataParallel(registry.create('Network', param.network.name)(**param.network.kwargs))
     model = CRN.CRN(**param["network"]["kwargs"])
 
+
     criterion = registry.create('Loss', param["loss"]["name"])(**param["loss"]["kwargs"])
     optimizer = registry.create('Optimizer', param["optimizer"]["name"])(model.parameters(), **param["optimizer"]["kwargs"])
     lr_scheduler = registry.create('LRScheduler', param["lr_scheduler"]["name"])(optimizer, **param["lr_scheduler"]["kwargs"])
 
-    pca = _pca_.PCA(param["PCA"]["kwargs"])
+    pca = _pca_.PCA(**param["PCA"]["kwargs"])
 
     # TODO: checkpoint
 
     # if param.use_gpu:
     #     model = model.cuda()
 
+
     for epoch in range(int(param["epoch"])):
-        for inputs, target in train_data_loader:
+        for inputs, targets in train_data_loader:
             optimizer.zero_grad()
 
             ground_truth = pca.get_components(inputs, targets, True)
+            print("get")
 
             output = model(inputs)
-
+            print("model")
             # how to get the truth
             # ground_truth = pca.get_components(inputs, targets, False)
             # how to get an img:
@@ -92,5 +95,5 @@ if __name__ == '__main__':
     param = yaml.load(open(os.path.join('param', '{}.yml'.format(args.load_params))))
     # print(param)
     arg.update(param, args.overwrite_param)
-    print(param)
+    # print(param)
     train(param)

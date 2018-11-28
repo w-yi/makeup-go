@@ -1,5 +1,5 @@
 dataset:
   name: 'PCA'
   kwargs:
-    path: "./data//EECS442_Makeup_Go/result_"
+    path: "./data/EECS442_Makeup_Go/result_"
 

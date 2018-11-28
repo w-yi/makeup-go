@@ -17,20 +17,25 @@ class PCA():
 
     def add_truth(self, X):
         n, _ = X.size()
-        self.mean = self.momentum * self.mean + (1-self.momentum) * torch.mean(x, 0, keepdim=True)  # 1 x d
+        self.mean = self.momentum * self.mean + (1-self.momentum) * torch.mean(X, 0, keepdim=True)  # 1 x d
         X = X - self.mean
         self.proj = self.momentum * self.proj + (1-self.momentum) * X.t() @ X / n  # d x d
         val, vec = torch.symeig(self.proj, True)
         self.eigenvalues = val[-self.n_top-1:].flip(0)
         self.eigenvectors = torch.stack(
-            [torch.power(vec[-1-i], 2).flip(0).view(3, self.kernel, self.kernel) for i in range(self.n_top)]
+            [vec[-1-i].flip(0).view(3, self.kernel, self.kernel) for i in range(self.n_top)]
         )
 
     def get_components(self, x, y, train):
         e = y - x
         if train:
-            add_truth(get_patches(e).view(-1, kernel * kernel * 3))  # n x d
-        components = [torch.nn.functional.conv2d(e, weight, padding=(self.kernel-1)/2) for weight in self.eigenvectors]
+            self.add_truth(get_patches(e).view(-1, self.kernel * self.kernel * 3))  # n x d
+        components = [torch.nn.functional.conv2d(
+            e, weight.view(3, 1, self.kernel, self.kernel), padding=(self.kernel-1)//2, groups=3
+        ) for weight in self.eigenvectors]
+        components = [torch.nn.functional.conv2d(
+            comp, weight.view(3, 1, self.kernel, self.kernel), padding=(self.kernel - 1) // 2, groups=3
+        ) for weight, comp in zip(self.eigenvectors, components)]
         components += [e - torch.sum(torch.stack(components), 0)]
         return [val ** (-0.5) * component for val, component in zip(self.eigenvalues, components)]
 

@@ -33,7 +33,9 @@ class CRN(nn.Module):
 
     def forward(self, x):
         features = self.common_network(x)
+        # print("common")
         components = [sub_network(features) for sub_network in self.subnetwork_list]
+        # print("sub")
         return torch.stack(components, dim=1)
 
     def get_nonlinear(self):
@@ -68,5 +70,6 @@ class CRN(nn.Module):
             nn.Conv2d(self.channel2, self.channel3, self.kernel2, padding=1),
             self.get_nonlinear(),
             nn.Conv2d(self.channel3, IN_CHANNEL, self.kernel2, padding=1),
+            _debug(),
         )
 

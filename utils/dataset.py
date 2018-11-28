@@ -14,6 +14,9 @@ from module import pca
 
 import numpy as np
 
+from PIL import Image
+import torchvision.transforms.functional as TF
+
 
 patch_m = 11
 
@@ -81,13 +84,12 @@ class TrainDataset(Dataset):
         #         # components = [projection(e, v) for v in self.eigenvectors]
         #         # components += [e - torch.sum(componnts)]
         #         # y = torch.stack([component/val for component, val in zip(components, self.eigenvalues)]).view(-1, H, W, 3)
-        return [img_to_tensor(os.join(self.x_path, self.x_files[idx])), img_to_tensor(os.join(self.y_path, self.y_files[idx]))]
+        return [img_to_tensor(os.path.join(self.x_path, self.x_files[idx])), img_to_tensor(os.path.join(self.y_path, self.y_files[idx]))]
 
 
 def img_to_tensor(path):
     image = Image.open(path)
     x = TF.to_tensor(image)
-    x.unsqueeze_(0)
     return x
 
 

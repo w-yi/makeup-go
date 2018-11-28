@@ -3,4 +3,4 @@ import torch.nn
 
 
 registry.register('Loss', 'CrossEntropy')(torch.nn.CrossEntropyLoss)
-registry.register('Loss', 'MSE')(torch.nn.torch.nn.MSELoss)
+registry.register('Loss', 'MSE')(torch.nn.MSELoss)

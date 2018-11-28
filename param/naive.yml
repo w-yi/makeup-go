@@ -5,11 +5,11 @@ network:
 train_dataset:
   name: 'Naive'
   kwargs:
-    path: "./data/train_"
+    path: "./data/EECS442_Makeup_Go/result_"
 valid_dataset:
   name: 'Naive'
   kwargs:
-    path: "./data/valid_"
+    path: "./data/EECS442_Makeup_Go/result_"
 
 PCA:
   kwargs: {}
