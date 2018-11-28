@@ -37,7 +37,9 @@ class PCA():
             comp, weight.view(3, 1, self.kernel, self.kernel), padding=(self.kernel - 1) // 2, groups=3
         ) for weight, comp in zip(self.eigenvectors, components)]
         components += [e - torch.sum(torch.stack(components), 0)]
-        return [val ** (-0.5) * component for val, component in zip(self.eigenvalues, components)]
+        return torch.stack(
+            [val ** (-0.5) * component for val, component in zip(self.eigenvalues, components)], 1
+        )
 
     def generate_img(self, components, x):
         components = [val**(0.5) * component for val, component in zip(self.eigenvalues, components)]
