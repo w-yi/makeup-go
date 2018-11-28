@@ -10,9 +10,9 @@ from module import CRN, _pca_
 # import evaluator as _evaluator
 from utils import registry
 from utils import dataset as _dataset
-# from utils import optimizer as _optimizer
-# from utils import lr_scheduler as _lr_scheduler
-# from utils import loss as _loss
+from utils import optimizer as _optimizer
+from utils import lr_scheduler as _lr_scheduler
+from utils import loss as _loss
 from utils import arg
 
 
