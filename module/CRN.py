@@ -16,7 +16,7 @@ class _debug(nn.Module):
 
 
 class CRN(nn.Module):
-    def __init__(self, eigenvalues, kernel1=3, kernel2=3, channel1=56, channel2=12, channel3=64, nonlinear="PReLU"):
+    def __init__(self, n_top=7, kernel1=3, kernel2=3, channel1=56, channel2=12, channel3=64, nonlinear="PReLU"):
         # channel3???????????64, eigenvalues
         super(CRN, self).__init__()
         self.kernel1 = kernel1
@@ -25,10 +25,9 @@ class CRN(nn.Module):
         self.channel2 = channel2
         self.channel3 = channel3
         self.nonlinear = nonlinear
-        self.eigenvalues = eigenvalues
 
         self.common_network = self.generate_commonnetwork()
-        self.subnetwork_list = [self.generate_subnetwork() for _ in eigenvalues]
+        self.subnetwork_list = [self.generate_subnetwork() for _ in range(n_top+1)]
 
         # self._initialize_weights()
 

@@ -1,4 +1,3 @@
-
 import torch
 
 
@@ -38,7 +37,7 @@ class PCA():
     def generate_an_img(self, components, x):
         components = [val**(0.5) * component for val, component in zip(self.eigenvalues, components)]
         e = torch.sum(torch.stack(components), 0) + self.mean
-        return y + x
+        return e + x
 
 
 def get_patches(images):

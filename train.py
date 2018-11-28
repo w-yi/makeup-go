@@ -32,9 +32,9 @@ def train(param):
     valid_data_loader = data.DataLoader(valid_dataset, **param["loader"])
     # pin_memory=param.use_gpu,
 
-    eigenvalues = train_dataset.get_()
+    # eigenvalues = train_dataset.get_()
     # model = torch.nn.DataParallel(registry.create('Network', param.network.name)(**param.network.kwargs))
-    model = CRN.CRN(eigenvalues=eigenvalues, **param["network"]["kwargs"])
+    model = CRN.CRN(**param["network"]["kwargs"])
 
     criterion = registry.create('Loss', param["loss"]["name"])(**param["loss"]["kwargs"])
     optimizer = registry.create('Optimizer', param["optimizer"]["name"])(model.parameters(), **param["optimizer"]["kwargs"])
