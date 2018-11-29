@@ -104,7 +104,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
     # print(args.overwrite_param)
     param = yaml.load(open(os.path.join('param', '{}.yml'.format(args.load_params))))
-    print(param["valid"])
 
     # print(param)
     arg.update(param, args.overwrite_param)
