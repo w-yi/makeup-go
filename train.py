@@ -53,16 +53,18 @@ def train(param):
 
 
     for epoch in range(int(param["epoch"])):
+        print(epoch)
         for inputs, targets in train_data_loader:
             optimizer.zero_grad()
 
             ground_truth = pca.get_components(inputs, targets, True)
-            print("get")
+            # print("get")
 
             output = model(inputs)
-            print("model")
+            # print("model")
 
             loss = criterion(output, ground_truth)
+            print(loss)
 
             loss.backward()
             optimizer.step()

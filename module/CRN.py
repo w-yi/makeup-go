@@ -70,6 +70,6 @@ class CRN(nn.Module):
             nn.Conv2d(self.channel2, self.channel3, self.kernel2, padding=1),
             self.get_nonlinear(),
             nn.Conv2d(self.channel3, IN_CHANNEL, self.kernel2, padding=1),
-            _debug(),
+            # _debug(),
         )
 

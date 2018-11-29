@@ -40,7 +40,7 @@ loader:
 
 checkpoint: null
 # use_gpu: True
-epoch: 100
+epoch: 20
 # evaluator:
 #   name: 'Default'
 #   kwargs: {}
