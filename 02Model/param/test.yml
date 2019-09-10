@@ -1,0 +1,49 @@
+network:
+  kwargs:
+    nonlinear: "PReLU"
+
+train_dataset:
+  name: 'Naive'
+  kwargs:
+    path: "./data/EECS442_Makeup_Go/result_"
+    len: 1000
+
+PCA:
+  kwargs: {}
+
+optimizer:
+  name: 'SGD'
+  kwargs: 
+    lr: 1
+    momentum: 0.2
+    dampening: 0
+    weight_decay: 0.0001
+    nesterov: true
+
+lr_scheduler:
+  name: 'Exponential'
+  kwargs:
+    gamma: 0.99965
+
+loss:
+  name: 'PatchWeightSquare'
+  kwargs: 
+    basis: Q.t
+
+
+loader:
+  shuffle: True
+  batch_size: 1
+  num_workers: 0
+  drop_last: false
+
+
+checkpoint: null
+# use_gpu: True
+epoch: 10
+# evaluator:
+#   name: 'Default'
+#   kwargs: {}
+
+valid: ./data/EECS442_Makeup_Go/result_test
+

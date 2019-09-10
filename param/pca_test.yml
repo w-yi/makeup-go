@@ -1,5 +1,0 @@
-dataset:
-  name: 'PCA'
-  kwargs:
-    path: "./data/EECS442_Makeup_Go/test_"
-

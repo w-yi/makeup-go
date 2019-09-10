@@ -1,0 +1,48 @@
+network:
+  kwargs:
+    nonlinear: "PReLU"
+
+train_dataset:
+  name: 'Naive'
+  kwargs:
+    path: "./data/EECS442_Makeup_Go/result_"
+    len: 5
+
+PCA:
+  kwargs: {}
+
+optimizer:
+  name: 'SGD'
+  kwargs: 
+    lr: 0.01
+    momentum: 0
+    dampening: 0
+    weight_decay: 0
+    nesterov: false
+
+lr_scheduler:
+  name: 'StepLR'
+  kwargs:
+    step_size: 1273
+    gamma: 0.25
+
+loss:
+  name: 'MSE'
+  kwargs: {}
+
+
+loader:
+  shuffle: True
+  batch_size: 1
+  num_workers: 0
+  drop_last: false
+
+
+checkpoint: null
+# use_gpu: True
+epoch: 10
+# evaluator:
+#   name: 'Default'
+#   kwargs: {}
+
+valid: ./data/EECS442_Makeup_Go/result_beautified/beautified(1).jpg
